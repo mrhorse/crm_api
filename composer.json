@@ -3,7 +3,7 @@
     "type": "library",
     "description": "ThankQ API Wrapper",
     "keywords": ["thankq"],
-    "homepage": "https://github.com/mrhorse/thankqapi",
+    "homepage": "https://github.com/mrhorse/crm_api",
     "license": "MIT",
     "authors": [
         {
