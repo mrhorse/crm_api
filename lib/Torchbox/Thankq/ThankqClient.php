@@ -6,7 +6,7 @@ use Torchbox\Thankq\Api\EsitWS;
 use Torchbox\Thankq\Validation;
 
 
-class Client {
+class ThankqClient extends EsitWS {
 
   /**
    * Store reference to the API Object
@@ -24,7 +24,7 @@ class Client {
    * @param string $wsdl The wsdl file to use
    */
   public function __construct(array $options = array(), $wsdl = null){
-    $this->api = new EsitWS($options, $wsdl);
+    parent::__construct($options, $wsdl);
     $this->validation = new Validation();
   }
 
