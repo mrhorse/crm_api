@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.0.7"
+        "php": ">=5.0.7",
+        "symfony/dependency-injection": "^3.1"
     },
     "autoload": {
         "psr-0": {
