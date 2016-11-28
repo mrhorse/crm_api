@@ -1,0 +1,22 @@
+{
+    "name": "torchbox/thankq",
+    "type": "library",
+    "description": "ThankQ API Wrapper",
+    "keywords": ["thankq"],
+    "homepage": "https://github.com/mrhorse/thankqapi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Steve Horsey",
+            "email": "steve.horsey@torchbox.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.0.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "Torchbox\\Thankq\\": "lib/"
+        }
+    }
+}
