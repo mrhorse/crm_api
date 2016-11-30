@@ -11,12 +11,11 @@
             "email": "steve.horsey@torchbox.com"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "php": ">=5.0.7",
-        "symfony/dependency-injection": ">2.0-stable",
-        "symfony/config": ">2.0-stable",
-        "symfony/yaml": ">2.0-stable"
+        "symfony/dependency-injection": ">2.0",
+        "symfony/config": ">2.0",
+        "symfony/yaml": ">2.0"
     },
     "autoload": {
         "psr-0": {
