@@ -1,0 +1,11 @@
+services:
+  thankq.client:
+    class:        Torchbox\Thankq\ThankqClient
+
+  thankq.lookup:
+    class:        Torchbox\Thankq\Lookup
+    arguments:    ['@thankq.client']
+
+  thankq.dolookupget:
+      class:        Torchbox\Thankq\Api\doLookupGet
+
