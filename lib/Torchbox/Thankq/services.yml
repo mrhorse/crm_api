@@ -1,0 +1,9 @@
+services:
+  thankq.client:
+    class:        Torchbox\Thankq\ThankqClient
+    arguments:    [options, wsdl]
+
+  thankq.lookup:
+    class:        Torchbox\Thankq\Lookup
+    arguments:    [@thankq.client, @thankq.]
+
