@@ -1,11 +1,31 @@
 services:
+
   thankq.client:
-    class:        Torchbox\Thankq\ThankqClient
+    class:        Torchbox\Thankq\Services\ThankqClient
+    arguments:
+      - '%soap.options%'
+      - '%soap.wsdl%'
+
+  thankq.validation:
+    class:        Torchbox\Thankq\Validation
+    arguments:
+      - '@thankq.lookup'
+
 
   thankq.lookup:
-    class:        Torchbox\Thankq\Lookup
-    arguments:    ['@thankq.client']
+    class:        Torchbox\Thankq\Services\Lookup
+    arguments:
+      - '@thankq.client'
 
-  thankq.dolookupget:
-      class:        Torchbox\Thankq\Api\doLookupGet
+
+  thankq.contact:
+    class:        Torchbox\Thankq\Services\Contact
+    arguments:
+      - '@thankq.client'
+      - '@thankq.validation'
+
+
+
+
+
 

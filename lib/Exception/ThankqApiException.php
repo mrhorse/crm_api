@@ -1,12 +1,12 @@
 <?php
 
-namespace Torchbox\Thankq;
+namespace Torchbox\Thankq\Exception;
 
 /**
  * Class ThankqApiException
  * Class for all Thankq API Exceptions
  *
- * @package Torchbox\Thankq
+ * @package Torchbox\Thankq\Exception
  */
 
 class ThankqApiException extends \Exception {

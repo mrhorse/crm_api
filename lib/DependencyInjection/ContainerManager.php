@@ -1,6 +1,6 @@
 <?php
 
-namespace Torchbox\Thankq;
+namespace Torchbox\Thankq\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -29,7 +29,7 @@ class ContainerManager {
   }
 
   private function register() {
-    $fileLocator = new FileLocator(__DIR__);
+    $fileLocator = new FileLocator(__DIR__ . '/..');
     $loader = new YamlFileLoader($this->container, $fileLocator);
     $loader->load('services.yml');
   }
