@@ -9,6 +9,6 @@ namespace Torchbox\Thankq\Exception;
  * @package Torchbox\Thankq\Exception
  */
 
-class ClassException extends \Exception {
+class ApiClassException extends \Exception {
 
 }

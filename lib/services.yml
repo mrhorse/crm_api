@@ -5,12 +5,12 @@ services:
     arguments:
       - '%soap.options%'
       - '%soap.wsdl%'
+    public: false
 
   thankq.validation:
-    class:        Torchbox\Thankq\Validation
+    class:        Torchbox\Thankq\Services\Validation
     arguments:
       - '@thankq.lookup'
-
 
   thankq.lookup:
     class:        Torchbox\Thankq\Services\Lookup
@@ -18,11 +18,24 @@ services:
       - '@thankq.client'
 
 
-  thankq.contact:
-    class:        Torchbox\Thankq\Services\Contact
+  thankq.contact.create:
+    class:        Torchbox\Thankq\Services\Contact\Create
     arguments:
       - '@thankq.client'
       - '@thankq.validation'
+
+  thankq.contact.read:
+    class:        Torchbox\Thankq\Services\Contact\Read
+    arguments:
+      - '@thankq.client'
+      - '@thankq.validation'
+
+  thankq.contact.update:
+    class:        Torchbox\Thankq\Services\Contact\Update
+    arguments:
+      - '@thankq.client'
+      - '@thankq.validation'
+      - '@thankq.contact.read'
 
 
 

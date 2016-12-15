@@ -37,7 +37,7 @@ class ArrayOfEsitWSlookup implements \ArrayAccess, \Iterator, \Countable
     /**
      * ArrayAccess implementation
      *
-     * @param mixed $offset An offset to check for
+     * @param mixed $offset An offset to check_is_integer for
      * @return boolean true on success or false on failure
      */
     public function offsetExists($offset)

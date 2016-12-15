@@ -1,46 +1,39 @@
 <?php
 
-namespace Torchbox\Thankq\Services;
+namespace Torchbox\Thankq\Services\Contact;
 
-use Torchbox\Thankq\Validation;
-use Torchbox\Thankq\Exception\ClassException;
-use Torchbox\Thankq\Exception\TypeException;
+use Torchbox\Thankq\Exception\ThankqApiException;
+use Torchbox\Thankq\Services\ThankqClient;
+use Torchbox\Thankq\Services\Validation;
+use Torchbox\Thankq\Exception\ApiClassException;
+use Torchbox\Thankq\Exception\DataTypeException;
 use Torchbox\Thankq\Exception\ValidationException;
-
-use Torchbox\Thankq\Api\doContactGet;
-use Torchbox\Thankq\Api\doContactInsert;
-
-use Torchbox\Thankq\Api\esitWSdoContactInsertArgument;
-use Torchbox\Thankq\Api\esitWScontact;
-use Torchbox\Thankq\Api\esitWScontactAddress;
-use Torchbox\Thankq\Api\esitWScontactAttribute;
-use Torchbox\Thankq\Api\esitWScontactDataProtection;
-use Torchbox\Thankq\Api\esitWSdoContactInsertResult;
-use Torchbox\Thankq\Api\esitWSdoContactGetResult;
 
 
 
 /**
- * Class Contact
- * Performs 'contact' operations on the API - contact data is the main data
- * held for a member in the CRM.
+ * Class Base
+ * Base for performing 'contact' operations on the API - contact data is the
+ * main data held for a member in the CRM.
  *
- * @package Torchbox\Thankq\Services
+ * IMPORTANT:
+ *
+ * @package Torchbox\Thankq\Services\Contact
  */
-class Contact {
+class Base {
 
-  /** @var \Torchbox\Thankq\Services\ThankqClient **/
-  private $client;
+  /** @var ThankqClient **/
+  protected $client;
 
-  /** @var \Torchbox\Thankq\Validation **/
-  private $validation;
+  /** @var Validation $validation **/
+  protected $validation;
 
 
   /**
    * @var array Incoming field data keys associated with their esit class,
    * method and validation method(s).
    */
-  private $field_map = array(
+  protected $field_map = array(
 
     /**
      * esitWScontact
@@ -153,7 +146,7 @@ class Contact {
       'class' => 'esitWScontactAttribute',
       'method' => 'setDateOfBirth',
       // Must be datetime object \DateTime
-      'validation' => array('is_datetime_object'),
+      'validation' => array('check_is_datetime_object'),
     ),
     'source' => array(
       'class' => 'esitWScontactAttribute',
@@ -192,8 +185,8 @@ class Contact {
 
   /**
    * Contact constructor.
-   * @param \Torchbox\Thankq\Services\ThankqClient $client
-   * @param \Torchbox\Thankq\Validation $validation
+   * @param ThankqClient $client
+   * @param Validation $validation
    */
   public function __construct(ThankqClient $client, Validation $validation) {
     $this->client = $client;
@@ -210,15 +203,11 @@ class Contact {
    return $field_defs_only ? array_keys($this->field_map) : $this->field_map;
   }
 
-
   /**
-   * @param array $field_data - Assoc array of field_names => values
-   * Correspond to the map of $this->fields_to_methods
-   * @return \Torchbox\Thankq\Api\esitWSdoContactInsertResult
+   * Some input field data will need adjusting before validation and
+   * @param $field_data
    */
-  public function insertContact(array $field_data) {
-
-    $field_map = $this->field_map;
+  protected function fieldDataPreProcess(&$field_data) {
 
     /**
      * Do things to the input data array before any validation and API calls
@@ -233,120 +222,72 @@ class Contact {
       $field_data['address_1'] = $field_data['address_1'] . "\n" . $field_data['address_2'];
       unset($field_data['address_2']);
     }
+  }
 
-    // error_log(print_r($field_data,true));
 
-
+  /**
+   * @param array $field_data
+   * @throws \Torchbox\Thankq\Exception\ThankqApiException
+   */
+  protected function validateFieldData(array $field_data) {
     // First handle our pre-CRM validation functions, declared in the
     // field map.
-    $errors = array();
     foreach ($field_data as $field_name => $value) {
-      if (array_key_exists($field_name, $field_map)) {
+      if (array_key_exists($field_name, $this->field_map)) {
         $validation_functions = !empty($field_map[$field_name]['validation']) ? $field_map[$field_name]['validation'] : array();
         foreach ($validation_functions as $validate) {
-          try {
+
             // Call corresponding validation method from Validation Class and
             // catch any nasty things.
             if (method_exists($this->validation, $validate) && is_callable(array($this->validation, $validate))) {
               call_user_func(array($this->validation, $validate), $value);
             } else {
-              Throw new ClassException('Method ' . $validate . ' does not exist or is not callable on class Torchbox\\Thankq\\Validation.');
+              Throw new ApiClassException('Method ' . $validate . ' does not exist or is not callable on class Torchbox\\Thankq\\Validation.');
             }
-          } catch (ClassException $e) {
-            $errors['class'] = $e->getMessage();
-          } catch (TypeException $e) {
-            $errors['type'] = 'Field `' .$field_name . '`: ' . $e->getMessage();
+            // @TODO CATCH THESE FURTHER UP!!
+
+          /*
+
+           catch (ApiClassException $e) {
+            throw new ThankqApiException('Thankq Api error', null, $e);
+          } catch (DataTypeException $e) {
+            throw new ThankqApiException('Thankq Api datatype error: field `' . $field_name . '`', null, $e);
           } catch (ValidationException $e) {
-            $errors['validation'] = 'Field `' .$field_name . '`: ' . $e->getMessage();
+            throw new ThankqApiException('Thankq Api validation error: field `' . $field_name . '`', null, $e);
           }
+          */
         }
       }
     }
-    // @TODO HOW TO SEND ERRORS BACK IN A USEFUL MANNER
-    if (!empty($errors)) {
-      error_log(print_r($errors, true));
-    }
-
-
-
-    // Assign new instances of our esit data insertion classes to variables that
-    // match the 'class' strings in the field_map array.
-    $esitWScontact = new esitWScontact();
-    $esitWScontactAddress = new esitWScontactAddress();
-    $esitWScontactAttribute = new esitWScontactAttribute();
-    // Defaults should be opt-out for data protection, according to best
-    // practices.
-    $esitWScontactDataProtection = new esitWScontactDataProtection(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-
-
-    $api_errors = array();
-    foreach ($field_data as $field_name => $value) {
-      if (array_key_exists($field_name, $field_map) && !empty($field_data[$field_name])) {
-        // convert the classname in array to variable
-        $classname = $field_map[$field_name]['class'];
-        $class = $$classname;
-
-        try {
-          if (method_exists($class, $field_map[$field_name]['method']) && is_callable(array($class, $field_map[$field_name]['method']))) {
-            //error_log($class . ' ' . $field_map[$field_name]['method']);
-            call_user_func(array($class, $field_map[$field_name]['method']), $value);
-          } else {
-            Throw new ClassException('Method ' . $field_map[$field_name]['method'] . ' does not exist or is not callable on API class ' . $classname . '.');
-          }
-
-        } catch (ClassException $e) {
-          $api_errors['class'] = $e->getMessage();
-        }
-
-      }
-    }
-    //error_log(print_r($esitWScontact, true));
-    //error_log(print_r($esitWScontactAddress, true));
-    //error_log(print_r($esitWScontactAttribute, true));
-
-    // Build our argument to pass to the doContactInsert class
-    $insert_data = new esitWSdoContactInsertArgument();
-    $insert_data->setContact($esitWScontact);
-    $insert_data->setContactAddress($esitWScontactAddress);
-    $insert_data->setContactAttribute($esitWScontactAttribute);
-    $insert_data->setContactDataProtection($esitWScontactDataProtection);
-
-
-    $request = new doContactInsert($insert_data);
-    $response = $this->client->doContactInsert($request);
-    /** @var esitWSdoContactInsertResult $result */
-    $result = $response->getDoContactInsertResult();
-
-    /* Don't think we need this. @todo Remove this block if we don't need it */
-    //$insert_response = new doContactInsertResponse($result);
-    /** @var esitWSdoContactInsertResult $return */
-    //$return = $insert_response->getDoContactInsertResult();
-
-    return $result;
   }
 
   /**
-   * @param (string) $serial - Contact serial number
-   * @return \Torchbox\Thankq\Api\esitWSdoContactGetResult
+   * @param array $field_data
+   * @throws \Torchbox\Thankq\Exception\ThankqApiException
    */
-  public function getContact($serial) {
+  protected function setContactData(array $field_data) {
 
-    try {
-      $this->validation->ensure_string($serial);
-    } catch (TypeException $e) {
-      echo 'Caught exception: ',  $e->getMessage(), "\n";
+    foreach ($field_data as $field_name => $value) {
+      if (array_key_exists($field_name, $this->field_map) && !empty($field_data[$field_name])) {
+        // convert the classname in array to variable
+        $classname = $this->field_map[$field_name]['class'];
+        // Variable variable (usually double $$ for procedural stuff).
+        $class = $this->$classname;
+
+        try {
+          if (method_exists($class, $this->field_map[$field_name]['method']) && is_callable(array($class, $this->field_map[$field_name]['method']))) {
+            //error_log($class . ' ' . $field_map[$field_name]['method']);
+            call_user_func(array($class, $this->field_map[$field_name]['method']), $value);
+          } else {
+            Throw new ApiClassException('Method ' . $this->field_map[$field_name]['method'] . ' does not exist or is not callable on API class ' . $classname . '.');
+          }
+        } catch (ApiClassException $e) {
+          throw new ThankqApiException('Thankq Api error', null, $e);
+        }
+
+      }
     }
-
-
-    $request = new doContactGet($serial);
-    $response = $this->client->doContactGet($request);
-    /** @var esitWSdoContactGetResult $result */
-    $result = $response->getDoContactGetResult();
-    return $result;
   }
 
-  public function searchContact($num_results, $data) {
 
-
-  }
 }

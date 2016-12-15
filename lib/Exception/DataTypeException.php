@@ -10,6 +10,6 @@ namespace Torchbox\Thankq\Exception;
  * @package Torchbox\Thankq\Exception
  */
 
-class TypeException extends \Exception {
+class DataTypeException extends \Exception {
 
  }
