@@ -2,7 +2,7 @@
 
 namespace Torchbox\Thankq\Services;
 
-use Torchbox\Thankq\Exception;
+use Torchbox\Thankq\Exception\ValidationException;
 
 class Validation {
 
@@ -14,50 +14,52 @@ class Validation {
   }
 
   /**
-   * @param $value
+   * @param $input
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_integer($value) {
-    if (FALSE === is_int($value)) {
-      throw new Exception\DataTypeException('check_is_integer expected Argument 1 to be Integer');
+  public function check_is_integer($input) {
+    if (FALSE === is_int($input)) {
+      throw new ValidationException('check_is_integer expected Argument 1 to be Integer');
     }
     return TRUE;
   }
 
   /**
-   * @param $value
+   * @param $input
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_string($value) {
-    if (FALSE === is_string($value)) {
-      throw new Exception\DataTypeException('check_is_string expected Argument 1 to be String');
+  public function check_is_string($input) {
+    if (FALSE === is_string($input)) {
+      throw new ValidationException('check_is_string expected Argument 1 to be String');
     }
     return TRUE;
   }
 
-  public function check_is_datetime_object($value) {
-    if (!($value instanceof \DateTime)) {
-      throw new \Exception('Value to expected to be a DateTime object.');
+  public function check_is_datetime_object($input) {
+    if (!($input instanceof \DateTime)) {
+      throw new ValidationException('check_is_datetime_object is expected to be a DateTime object.');
     }
     return TRUE;
   }
 
-  public function check_is_valid_name_prefix($value) {
-    /*
+  public function check_is_allowed_name_prefix($input) {
+
     $valid_titles = $this->lookup->getNamePrefixes();
-    if (!in_array($value, $valid_titles));
+    if (!in_array($input, $valid_titles)) {
 
+    }
     throw new ValidationException('Contact title does not match any of allowed values.');
-    */
-
 
   }
 
 
-  public function is_email_format() {
-
+  public function check_min_length($input, $length) {
+    if (strlen($input) > 0 && strlen($input) < $length) {
+      throw new ValidationException('Input value to expected to be less than ' . $length . '.');
+    }
+    return TRUE;
   }
 
 

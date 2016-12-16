@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: steveh
- * Date: 12/12/2016
- * Time: 16:45
- */
 
 namespace Torchbox\Thankq\Services\Contact;
 
@@ -13,7 +7,10 @@ use Torchbox\Thankq\Services\Validation;
 use Torchbox\Thankq\Exception;
 use Torchbox\Thankq\Api;
 
-
+/**
+ * Class Read
+ * @package Torchbox\Thankq\Services\Contact
+ */
 class Read extends Base {
 
   public function __construct(ThankqClient $client, Validation $validation) {
@@ -27,14 +24,14 @@ class Read extends Base {
    */
   public function getContact($serial) {
 
-    if ($this->validation->check_is_string($serial)) {
+    $this->validation->check_is_string($serial);
 
-      $request = new Api\doContactGet($serial);
-      $response = $this->client->doContactGet($request);
-      /** @var Api\esitWSdoContactGetResult $result */
-      $result = $response->getDoContactGetResult();
-      return $result;
-    }
+    $request = new Api\doContactGet($serial);
+    $response = $this->client->doContactGet($request);
+    /** @var Api\esitWSdoContactGetResult $result */
+    $result = $response->getDoContactGetResult();
+    return $result;
+
   }
 
 

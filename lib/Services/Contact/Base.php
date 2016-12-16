@@ -6,7 +6,6 @@ use Torchbox\Thankq\Exception\ThankqApiException;
 use Torchbox\Thankq\Services\ThankqClient;
 use Torchbox\Thankq\Services\Validation;
 use Torchbox\Thankq\Exception\ApiClassException;
-use Torchbox\Thankq\Exception\DataTypeException;
 use Torchbox\Thankq\Exception\ValidationException;
 
 
@@ -15,8 +14,6 @@ use Torchbox\Thankq\Exception\ValidationException;
  * Class Base
  * Base for performing 'contact' operations on the API - contact data is the
  * main data held for a member in the CRM.
- *
- * IMPORTANT:
  *
  * @package Torchbox\Thankq\Services\Contact
  */
@@ -47,7 +44,7 @@ class Base {
     'first_name' => array(
       'class' => 'esitWScontact',
       'method' => 'setFirstname',
-      'validation' => array(),
+      'validation' => array('blurg', 'another'),
     ),
 
     // Secondname = surname, fyi
@@ -218,7 +215,7 @@ class Base {
      */
 
     // There is no storage for address2 in Thankq - Merge add2 into 1, separate with newline.
-    if (!empty($field_data['address_1'] && !empty(trim($field_data['address_2'])))) {
+    if (!empty($field_data['address_1']) && !empty(trim($field_data['address_2']))) {
       $field_data['address_1'] = $field_data['address_1'] . "\n" . $field_data['address_2'];
       unset($field_data['address_2']);
     }
@@ -232,30 +229,22 @@ class Base {
   protected function validateFieldData(array $field_data) {
     // First handle our pre-CRM validation functions, declared in the
     // field map.
+
     foreach ($field_data as $field_name => $value) {
       if (array_key_exists($field_name, $this->field_map)) {
-        $validation_functions = !empty($field_map[$field_name]['validation']) ? $field_map[$field_name]['validation'] : array();
-        foreach ($validation_functions as $validate) {
+        $validation_functions = !empty($this->field_map[$field_name]['validation']) ? $this->field_map[$field_name]['validation'] : array();
+        foreach ($validation_functions as $function) {
 
-            // Call corresponding validation method from Validation Class and
-            // catch any nasty things.
-            if (method_exists($this->validation, $validate) && is_callable(array($this->validation, $validate))) {
-              call_user_func(array($this->validation, $validate), $value);
-            } else {
-              Throw new ApiClassException('Method ' . $validate . ' does not exist or is not callable on class Torchbox\\Thankq\\Validation.');
-            }
-            // @TODO CATCH THESE FURTHER UP!!
+          // Call corresponding validation method from Validation Class and
+          // catch any nasty things.
 
-          /*
+          if (method_exists($this->validation, $function) && is_callable(array($this->validation, $function))) {
 
-           catch (ApiClassException $e) {
-            throw new ThankqApiException('Thankq Api error', null, $e);
-          } catch (DataTypeException $e) {
-            throw new ThankqApiException('Thankq Api datatype error: field `' . $field_name . '`', null, $e);
-          } catch (ValidationException $e) {
-            throw new ThankqApiException('Thankq Api validation error: field `' . $field_name . '`', null, $e);
+            call_user_func(array($this->validation, $function), $value);
           }
-          */
+          else {
+            throw new ApiClassException('Method ' . $function . ' does not exist or is not callable on class Torchbox\\Thankq\\Validation.');
+          }
         }
       }
     }
@@ -274,15 +263,11 @@ class Base {
         // Variable variable (usually double $$ for procedural stuff).
         $class = $this->$classname;
 
-        try {
-          if (method_exists($class, $this->field_map[$field_name]['method']) && is_callable(array($class, $this->field_map[$field_name]['method']))) {
-            //error_log($class . ' ' . $field_map[$field_name]['method']);
-            call_user_func(array($class, $this->field_map[$field_name]['method']), $value);
-          } else {
-            Throw new ApiClassException('Method ' . $this->field_map[$field_name]['method'] . ' does not exist or is not callable on API class ' . $classname . '.');
-          }
-        } catch (ApiClassException $e) {
-          throw new ThankqApiException('Thankq Api error', null, $e);
+        if (method_exists($class, $this->field_map[$field_name]['method']) && is_callable(array($class, $this->field_map[$field_name]['method']))) {
+          //error_log($class . ' ' . $field_map[$field_name]['method']);
+          call_user_func(array($class, $this->field_map[$field_name]['method']), $value);
+        } else {
+          throw new ApiClassException('Method ' . $this->field_map[$field_name]['method'] . ' does not exist or is not callable on API class ' . $classname . '.');
         }
 
       }

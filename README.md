@@ -10,6 +10,7 @@ The library relies heavily on services (DI via Symfony2 component) due to the li
 ### Lookup
 
 - Perform operations based on the lookup table.
+- The methods retrieve values from the lookups according to our case uses, these will probably need to be adjusted if this is used in any other projects.
 
 ### Contact
 
@@ -19,9 +20,20 @@ The library relies heavily on services (DI via Symfony2 component) due to the li
 
 ## Usage
 
-Assumed to be required by composer and installed by this point.
+Assumed to be required by composer and installed by this point, e.g.:
+````
+"require": {
+	  "torchbox/thankq": "dev-master"
+    },
+   "repositories": [
+     {
+      "type": "git",
+      "url": "https://github.com/mrhorse/crm_api"
+     }
+    ]
+````
 
-
+Then in your app:
 
 
 ````
@@ -35,3 +47,8 @@ Assumed to be required by composer and installed by this point.
 
 ````
 
+With the container you can now access the available services as outlined above, check `services.yml` for our 
+
+## Error handling
+
+Custom Exception classes bubble up and are caught by the standard Exception class - calling `$e->getPrevious()` on `\Exception` in your app will allow you to gracefully deal with any error. `\SoapFault` exception must also be handled in your app as appropriate.  

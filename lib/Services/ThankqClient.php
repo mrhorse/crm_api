@@ -10,17 +10,6 @@ use Torchbox\Thankq\Validation;
 class ThankqClient extends EsitWS {
 
   /**
-   * Store reference to the API Object
-   * @var \Torchbox\Thankq\Api\EsitWS
-   */
-  protected $api;
-
-  /**
-   * @var \Torchbox\Thankq\Validation
-   */
-  protected $validation;
-
-  /**
    * @param array $options A array of config values
    * @param string $wsdl The wsdl file to use
    */
@@ -28,5 +17,6 @@ class ThankqClient extends EsitWS {
     //$container = $containerManager->getContainer();
     parent::__construct($options, $wsdl);
   }
+
 
 }

@@ -33,13 +33,14 @@ class Lookup {
   }
 
 
-
+  /**
+   *
+   * @return \Torchbox\Thankq\Api\esitWSlookup[]
+   */
   public function getNamePrefixes() {
     /** @var esitWSlookup[] $results */
     $lookups = $this->getLookupResults('TITLE');
-    return $lookups;
 
-    /*
     $results = array();
     foreach ($lookups as $lookup) {
       if ($lookup->getLookupvalue5() !== '') {
@@ -48,8 +49,6 @@ class Lookup {
     }
     ksort($results);
     return $results;
-    */
-
   }
 
   public function getMailingLists() {

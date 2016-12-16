@@ -2,7 +2,10 @@
 
 namespace Torchbox\Thankq\Services\Contact;
 
-use Torchbox\Thankq\Exception;
+use Torchbox\Thankq\Exception\ValidationException;
+use Torchbox\Thankq\Exception\ThankqApiException;
+use Torchbox\Thankq\Exception\ApiClassException;
+
 use Torchbox\Thankq\Services\ThankqClient;
 use Torchbox\Thankq\Services\Validation;
 
@@ -48,39 +51,40 @@ class Update extends Base {
    */
   public function updateContact($serial, array $field_data) {
 
+    $contact = $this->contact_read->getContact($serial);
 
+    // Retrive existing record and set update args in our properties
+    $this->esitWScontact = $contact->getContact();
+    $this->esitWScontactAddress = $contact->getContactAddress();
+    $this->esitWScontactAttribute = $contact->getContactAttribute();
+    $this->esitWScontactDataProtection = $contact->getContactDataProtection();
+
+    // Preprocess field data, update individual record
     try {
-      $contact = $this->contact_read->getContact($serial);
-
-      // Retrive existing record and set update args in our properties
-      $this->esitWScontact = $contact->getContact();
-      $this->esitWScontactAddress = $contact->getContactAddress();
-      $this->esitWScontactAttribute = $contact->getContactAttribute();
-      $this->esitWScontactDataProtection = $contact->getContactDataProtection();
-
-      // Preprocess field data, update individual record
       $this->fieldDataPreProcess($field_data);
       $this->validateFieldData($field_data);
       $this->setContactData($field_data);
-
-      // Build the argument for updating
-      $update_data = new Api\esitWSdoContactUpdateArgument();
-      //$update_data->setSerialnumber($serial);
-      $update_data->setContact($this->esitWScontact);
-      $update_data->setContactAddress($this->esitWScontactAddress);
-      $update_data->setContactAttribute($this->esitWScontactAttribute);
-      $update_data->setContactDataProtection($this->esitWScontactDataProtection);
-
-
-      $request = new Api\doContactUpdate($update_data);
-      $response = $this->client->doContactUpdate($request);
-      /** @var Api\esitWSdoContactInsertResult $result */
-      $result = $response->getDoContactUpdateResult();
-      return $result;
-
-    } catch(Exception\ThankqApiException $e) {
-      throw new \Exception('Thankq Api error', null, $e);
+    } catch (ValidationException $e) {
+      throw new ThankqApiException('Thankq library validation error.', NULL, $e);
+    } catch (ApiClassException $e) {
+      throw new ThankqApiException('Thankq library class error.', NULL, $e);
     }
+
+    // Build the argument for updating
+    $update_data = new Api\esitWSdoContactUpdateArgument();
+    $update_data->setSerialnumber($serial);
+    $update_data->setContact($this->esitWScontact);
+    $update_data->setContactAddress($this->esitWScontactAddress);
+    $update_data->setContactAttribute($this->esitWScontactAttribute);
+    $update_data->setContactDataProtection($this->esitWScontactDataProtection);
+
+
+    $request = new Api\doContactUpdate($update_data);
+    $response = $this->client->doContactUpdate($request);
+    /** @var Api\esitWSdoContactInsertResult $result */
+    $result = $response->getDoContactUpdateResult();
+    return $result;
+
   }
 
 
