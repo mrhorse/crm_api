@@ -34,11 +34,10 @@ class Lookup {
 
 
   /**
-   *
-   * @return \Torchbox\Thankq\Api\esitWSlookup[]
+   * @return array
    */
   public function getNamePrefixes() {
-    /** @var esitWSlookup[] $results */
+
     $lookups = $this->getLookupResults('TITLE');
 
     $results = array();
@@ -51,30 +50,32 @@ class Lookup {
     return $results;
   }
 
+  /**
+   * @return array
+   */
   public function getMailingLists() {
-    /** @var esitWSlookup[] $results */
+
     $lookups = $this->getLookupResults('MAILINGPREFERENCE');
-    return $lookups;
-    /*
+
     $results = array();
     foreach ($lookups as $lookup) {
       $results[] = $lookup->getLookupvalue1();
     }
     return $results;
-    */
   }
 
+  /**
+   * @return array
+   */
   public function getPublicationResources() {
-    /** @var esitWSlookup[] $lookups */
+
     $lookups = $this->getLookupResults('PUBLICATION CATEGORY');
-    return $lookups;
-    /*
+
     $results = array();
     foreach ($lookups as $lookup) {
       $results[] = $lookup->getLookupvalue1();
     }
     return $results;
-    */
   }
 
 
