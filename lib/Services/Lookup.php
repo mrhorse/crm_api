@@ -22,6 +22,7 @@ class Lookup {
   }
 
   /**
+   * All lookups use this request pattern.
    * @param $lookup string
    * @return \Torchbox\Thankq\Api\esitWSlookup[]
    */

@@ -30,17 +30,8 @@ class Update extends Base {
   public function __construct(ThankqClient $client, Validation $validation, Read $contactRead) {
     parent::__construct($client, $validation);
 
-
     $this->contact_read = $contactRead;
 
-    // Assign new instances of our esit data insertion classes to variables that
-    // match the 'class' strings in the field_map array.
-    $this->esitWScontact = new Api\esitWScontact();
-    $this->esitWScontactAddress = new Api\esitWScontactAddress();
-    $this->esitWScontactAttribute = new Api\esitWScontactAttribute();
-    // Defaults should be opt-out for data protection, according to best
-    // practices.
-    $this->esitWScontactDataProtection = new Api\esitWScontactDataProtection(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
   }
 
 

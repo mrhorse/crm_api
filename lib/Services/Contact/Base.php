@@ -226,7 +226,7 @@ class Base {
    * @param array $field_data
    * @throws \Torchbox\Thankq\Exception\ThankqApiException
    */
-  protected function validateFieldData(array $field_data) {
+  public function validateFieldData(array $field_data) {
     // First handle our pre-CRM validation functions, declared in the
     // field map.
 
@@ -239,7 +239,6 @@ class Base {
           // catch any nasty things.
 
           if (method_exists($this->validation, $function) && is_callable(array($this->validation, $function))) {
-
             call_user_func(array($this->validation, $function), $value);
           }
           else {

@@ -22,9 +22,13 @@ class Create extends Base {
    */
   public function __construct(ThankqClient $client, Validation $validation) {
     parent::__construct($client, $validation);
+  }
 
-    // Assign new instances of our esit data insertion classes to variables that
-    // match the 'class' strings in the field_map array.
+  /**
+   * Assign new instances of our esit data insertion classes to variables that
+   * match the 'class' strings in the field_map array.
+   */
+  private function initContactInsertArgs() {
     $this->esitWScontact = new Api\esitWScontact();
     $this->esitWScontactAddress = new Api\esitWScontactAddress();
     $this->esitWScontactAttribute = new Api\esitWScontactAttribute();
@@ -32,14 +36,14 @@ class Create extends Base {
     // practices.
     $this->esitWScontactDataProtection = new Api\esitWScontactDataProtection(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
   }
-
-
   /**
    * @param array $field_data
    * @return \Torchbox\Thankq\Api\esitWSdoContactInsertResult
    * @throws \Exception
    */
   public function insertContact(array $field_data) {
+
+    $this->initContactInsertArgs();
 
     $this->fieldDataPreProcess($field_data);
     $this->validateFieldData($field_data);
