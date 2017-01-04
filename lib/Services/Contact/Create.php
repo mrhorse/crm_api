@@ -45,8 +45,6 @@ class Create extends Base {
 
     $this->initContactInsertArgs();
 
-    $this->fieldDataPreProcess($field_data);
-    $this->validateFieldData($field_data);
     $this->setContactData($field_data);
 
     $insert_data = new Api\esitWSdoContactInsertArgument();

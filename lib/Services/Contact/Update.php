@@ -31,7 +31,6 @@ class Update extends Base {
     parent::__construct($client, $validation);
 
     $this->contact_read = $contactRead;
-
   }
 
 
@@ -50,16 +49,8 @@ class Update extends Base {
     $this->esitWScontactAttribute = $contact->getContactAttribute();
     $this->esitWScontactDataProtection = $contact->getContactDataProtection();
 
-    // Preprocess field data, update individual record
-    try {
-      $this->fieldDataPreProcess($field_data);
-      $this->validateFieldData($field_data);
-      $this->setContactData($field_data);
-    } catch (ValidationException $e) {
-      throw new ThankqApiException('Thankq library validation error.', NULL, $e);
-    } catch (ApiClassException $e) {
-      throw new ThankqApiException('Thankq library class error.', NULL, $e);
-    }
+    // Update the contact args with the new input data.
+    $this->setContactData($field_data);
 
     // Build the argument for updating
     $update_data = new Api\esitWSdoContactUpdateArgument();

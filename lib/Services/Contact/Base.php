@@ -44,7 +44,7 @@ class Base {
     'first_name' => array(
       'class' => 'esitWScontact',
       'method' => 'setFirstname',
-      'validation' => array('blurg', 'another'),
+      'validation' => array(),
     ),
 
     // Secondname = surname, fyi
@@ -201,10 +201,20 @@ class Base {
   }
 
   /**
+   * Publicly accessible middleman to preprocess and validation field data.
+   * @param array $field_data
+   * @return array
+   */
+  public function checkFieldData(array $field_data) {
+    $this->preProcessFieldData($field_data);
+    $this->validateFieldData($field_data);
+    return $field_data;
+  }
+  /**
    * Some input field data will need adjusting before validation and
    * @param $field_data
    */
-  protected function fieldDataPreProcess(&$field_data) {
+  protected function preProcessFieldData(array &$field_data) {
 
     /**
      * Do things to the input data array before any validation and API calls
@@ -219,25 +229,27 @@ class Base {
       $field_data['address_1'] = $field_data['address_1'] . "\n" . $field_data['address_2'];
       unset($field_data['address_2']);
     }
+
   }
 
 
   /**
+   * Delegate input fields to validation functions as declared in
+   * $this->field_map above. We should be able to execute this from outside
+   * the library.
+   *
    * @param array $field_data
-   * @throws \Torchbox\Thankq\Exception\ThankqApiException
+   * @return array $field_data
+   * @throws \Torchbox\Thankq\Exception\ApiClassException
    */
-  public function validateFieldData(array $field_data) {
-    // First handle our pre-CRM validation functions, declared in the
-    // field map.
+  protected function validateFieldData(array &$field_data) {
 
     foreach ($field_data as $field_name => $value) {
       if (array_key_exists($field_name, $this->field_map)) {
         $validation_functions = !empty($this->field_map[$field_name]['validation']) ? $this->field_map[$field_name]['validation'] : array();
         foreach ($validation_functions as $function) {
 
-          // Call corresponding validation method from Validation Class and
-          // catch any nasty things.
-
+          // Call corresponding validation method from Validation Class.
           if (method_exists($this->validation, $function) && is_callable(array($this->validation, $function))) {
             call_user_func(array($this->validation, $function), $value);
           }
@@ -250,6 +262,8 @@ class Base {
   }
 
   /**
+   * Set data for insertion on the appropriate arguments.
+   *
    * @param array $field_data
    * @throws \Torchbox\Thankq\Exception\ThankqApiException
    */
@@ -271,6 +285,7 @@ class Base {
 
       }
     }
+    return $this;
   }
 
 
