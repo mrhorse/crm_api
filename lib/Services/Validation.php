@@ -48,9 +48,9 @@ class Validation {
 
     $valid_titles = $this->lookup->getNamePrefixes();
     if (!in_array($input, $valid_titles)) {
-
+      throw new ValidationException('Title prefix does not match any of allowed values.');
     }
-    throw new ValidationException('Contact title does not match any of allowed values.');
+    return TRUE;
 
   }
 
@@ -60,6 +60,10 @@ class Validation {
       throw new ValidationException('Input value to expected to be less than ' . $length . '.');
     }
     return TRUE;
+  }
+
+  public function just_throw_a_goddamn_error() {
+    throw new ValidationException('Throwing a generic pointless error');
   }
 
 

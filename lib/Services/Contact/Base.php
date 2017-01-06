@@ -44,7 +44,7 @@ class Base {
     'first_name' => array(
       'class' => 'esitWScontact',
       'method' => 'setFirstname',
-      'validation' => array(),
+      'validation' => array('just_throw_a_goddamn_error'),
     ),
 
     // Secondname = surname, fyi
@@ -243,7 +243,7 @@ class Base {
    * @throws \Torchbox\Thankq\Exception\ApiClassException
    */
   protected function validateFieldData(array &$field_data) {
-
+    $result = NULL;
     foreach ($field_data as $field_name => $value) {
       if (array_key_exists($field_name, $this->field_map)) {
         $validation_functions = !empty($this->field_map[$field_name]['validation']) ? $this->field_map[$field_name]['validation'] : array();
@@ -259,6 +259,8 @@ class Base {
         }
       }
     }
+    // If we reach here without exception then flag validated
+    $field_data['thankq_validated'] = TRUE;
   }
 
   /**
