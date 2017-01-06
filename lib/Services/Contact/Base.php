@@ -39,12 +39,12 @@ class Base {
     'title' => array(
       'class' => 'esitWScontact',
       'method' => 'setTitle',
-      'validation' => array(),
+      'validation' => array('check_is_allowed_name_prefix'),
     ),
     'first_name' => array(
       'class' => 'esitWScontact',
       'method' => 'setFirstname',
-      'validation' => array('just_throw_a_goddamn_error'),
+      'validation' => array(),
     ),
 
     // Secondname = surname, fyi

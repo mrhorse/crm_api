@@ -14,6 +14,9 @@ class Validation {
   }
 
   /**
+   * Method to throw validation exception and add the field name so we can
+   * attribute it to the errored field on the frontend.
+   *
    * @param $field_name
    * @param $message
    * @throws \Torchbox\Thankq\Exception\ValidationException
