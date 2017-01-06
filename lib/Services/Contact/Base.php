@@ -251,7 +251,7 @@ class Base {
 
           // Call corresponding validation method from Validation Class.
           if (method_exists($this->validation, $function) && is_callable(array($this->validation, $function))) {
-            call_user_func(array($this->validation, $function), $value);
+            call_user_func(array($this->validation, $function), $field_name, $value);
           }
           else {
             throw new ApiClassException('Method ' . $function . ' does not exist or is not callable on class Torchbox\\Thankq\\Validation.');

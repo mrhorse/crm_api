@@ -14,13 +14,26 @@ class Validation {
   }
 
   /**
+   * @param $field_name
+   * @param $message
+   * @throws \Torchbox\Thankq\Exception\ValidationException
+   */
+  protected function throw_validation_exception($field_name, $message) {
+    $e = new ValidationException($message);
+    $e->setField($field_name);
+    throw $e;
+  }
+
+
+
+  /**
    * @param $input
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_integer($input) {
+  public function check_is_integer($field_name, $input) {
     if (FALSE === is_int($input)) {
-      throw new ValidationException('check_is_integer expected Argument 1 to be Integer');
+      $this->throw_validation_exception($field_name, 'check_is_integer expected Argument 1 to be Integer');
     }
     return TRUE;
   }
@@ -30,41 +43,44 @@ class Validation {
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_string($input) {
+  public function check_is_string($field_name, $input) {
     if (FALSE === is_string($input)) {
-      throw new ValidationException('check_is_string expected Argument 1 to be String');
+      $this->throw_validation_exception($field_name, 'check_is_string expected Argument 1 to be String');
     }
     return TRUE;
   }
 
-  public function check_is_datetime_object($input) {
+  public function check_is_datetime_object($field_name, $input) {
     if (!($input instanceof \DateTime)) {
-      throw new ValidationException('check_is_datetime_object is expected to be a DateTime object.');
+      $this->throw_validation_exception($field_name, 'check_is_datetime_object is expected to be a DateTime object.');
     }
     return TRUE;
   }
 
-  public function check_is_allowed_name_prefix($input) {
+  public function check_is_allowed_name_prefix($field_name,$input) {
 
     $valid_titles = $this->lookup->getNamePrefixes();
     if (!in_array($input, $valid_titles)) {
-      throw new ValidationException('Title prefix does not match any of allowed values.');
+      $this->throw_validation_exception($field_name, 'Title prefix does not match any of allowed values.');
     }
     return TRUE;
 
   }
 
-
-  public function check_min_length($input, $length) {
+  /**
+   * TODO: We can't have a 3rd arg due to the way we're executing the validation functions.
+   */
+  public function check_min_length($field_name, $input, $length) {
     if (strlen($input) > 0 && strlen($input) < $length) {
-      throw new ValidationException('Input value to expected to be less than ' . $length . '.');
+       $this->throw_validation_exception($field_name, 'Input value to expected to be less than ' . $length . '.')  ;
     }
     return TRUE;
   }
 
-  public function just_throw_a_goddamn_error() {
-    throw new ValidationException('Throwing a generic pointless error');
+  public function just_throw_a_goddamn_error($field_name, $input) {
+    $this->throw_validation_exception($field_name, 'Throwing a generic pointless error');
   }
+
 
 
 
