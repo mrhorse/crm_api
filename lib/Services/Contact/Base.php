@@ -17,7 +17,7 @@ use Torchbox\Thankq\Exception\ValidationException;
  *
  * @package Torchbox\Thankq\Services\Contact
  */
-class Base {
+abstract class Base {
 
   /** @var ThankqClient **/
   protected $client;
@@ -39,7 +39,7 @@ class Base {
     'title' => array(
       'class' => 'esitWScontact',
       'method' => 'setTitle',
-      'validation' => array('check_is_allowed_name_prefix'),
+      'validation' => array('checkIsAllowedNamePrefix'),
     ),
     'first_name' => array(
       'class' => 'esitWScontact',
@@ -75,9 +75,9 @@ class Base {
      * esitWScontactAddress
      */
 
-    'email' => array(
+    'mail' => array(
       'class' => 'esitWScontactAddress',
-      'method' => 'setMobileNumber',
+      'method' => 'setEmailAddress',
       'validation' => array(),
     ),
     'address_1' => array(
@@ -143,7 +143,7 @@ class Base {
       'class' => 'esitWScontactAttribute',
       'method' => 'setDateOfBirth',
       // Must be datetime object \DateTime
-      'validation' => array('check_is_datetime_object'),
+      'validation' => array('checkIsDatetimeObject'),
     ),
     'source' => array(
       'class' => 'esitWScontactAttribute',
@@ -160,6 +160,7 @@ class Base {
     ),
 
     /* Unused:
+    // Gender is automatically determined by the CRM using the name prefix
     'gender' => array(
       'class' => 'esitWScontactAttribute',
       'method' => 'setGender',
@@ -201,7 +202,12 @@ class Base {
   }
 
   /**
-   * Publicly accessible middleman to preprocess and validation field data.
+   * Publicly accessible middleman to preprocess and validation field data. The
+   * idea is to be able to use this method to prepare the input data for thankq,
+   * (for example such processing as merge address_2 into address_1), THEN
+   * validate. Keeping these functions separate from actual data insert/update
+   * operations means we can queue the already prepared and validated data in
+   * externally if needs be.
    * @param array $field_data
    * @return array
    */
@@ -221,6 +227,7 @@ class Base {
      * @TODO, remember address_2 input field map is an empty array!
      * @TODO Contact type, address type, where does organisation name go?
      * @TODO 'Source' is accounted for, but not 'source other' on API spreadsheet
+     * @TODO Do the work surrounding initials if first name is of min length
      *
      */
 

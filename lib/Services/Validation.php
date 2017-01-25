@@ -21,7 +21,7 @@ class Validation {
    * @param $message
    * @throws \Torchbox\Thankq\Exception\ValidationException
    */
-  protected function throw_validation_exception($field_name, $message) {
+  protected function throwValidationException($field_name, $message) {
     $e = new ValidationException($message);
     $e->setField($field_name);
     throw $e;
@@ -34,9 +34,9 @@ class Validation {
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_integer($field_name, $input) {
+  public function checkIsInteger($field_name, $input) {
     if (FALSE === is_int($input)) {
-      $this->throw_validation_exception($field_name, 'check_is_integer expected Argument 1 to be Integer');
+      $this->throwValidationException($field_name, 'checkIsInteger expected Argument 1 to be Integer');
     }
     return TRUE;
   }
@@ -46,25 +46,52 @@ class Validation {
    * @return bool
    * @throws \Torchbox\Thankq\Exception\DataTypeException
    */
-  public function check_is_string($field_name, $input) {
+  public function checkIsString($field_name, $input) {
     if (FALSE === is_string($input)) {
-      $this->throw_validation_exception($field_name, 'check_is_string expected Argument 1 to be String');
+      $this->throwValidationException($field_name, 'checkIsString expected Argument 1 to be String');
     }
     return TRUE;
   }
 
-  public function check_is_datetime_object($field_name, $input) {
+  /**
+   * Test for email - don't be too strict
+   * @param $input
+   * @return bool
+   * @throws \Torchbox\Thankq\Exception\DataTypeException
+   */
+  public function checkIsEmailLoose($field_name, $input) {
+    $allowed_chars = array('@', '.');
+    $is_validated = TRUE;
+    foreach($allowed_chars as $char) {
+      if (strpos($input, $char) == FALSE) {
+        $is_validated = FALSE;
+        break;
+      }
+    }
+    if (!$is_validated) {
+      $this->throwValidationException($field_name, 'Is not a valid email address.');
+    }
+    return TRUE;
+  }
+
+  /**
+   * Test input is a DataTime object
+   * @param $input
+   * @return bool
+   * @throws \Torchbox\Thankq\Exception\DataTypeException
+   */
+  public function checkIsDatetimeObject($field_name, $input) {
     if (!($input instanceof \DateTime)) {
-      $this->throw_validation_exception($field_name, 'check_is_datetime_object is expected to be a DateTime object.');
+      $this->throwValidationException($field_name, 'checkIsDatetimeObject is expected to be a DateTime object.');
     }
     return TRUE;
   }
 
-  public function check_is_allowed_name_prefix($field_name,$input) {
+  public function checkIsAllowedNamePrefix($field_name, $input) {
 
     $valid_titles = $this->lookup->getNamePrefixes();
     if (!in_array($input, $valid_titles)) {
-      $this->throw_validation_exception($field_name, 'Title prefix does not match any of allowed values.');
+      $this->throwValidationException($field_name, 'Title prefix does not match any of allowed values.');
     }
     return TRUE;
 
@@ -73,15 +100,15 @@ class Validation {
   /**
    * TODO: We can't have a 3rd arg due to the way we're executing the validation functions.
    */
-  public function check_min_length($field_name, $input, $length) {
+  public function checkMinLength($field_name, $input, $length) {
     if (strlen($input) > 0 && strlen($input) < $length) {
-       $this->throw_validation_exception($field_name, 'Input value to expected to be less than ' . $length . '.')  ;
+       $this->throwValidationException($field_name, 'Input value to expected to be less than ' . $length . '.')  ;
     }
     return TRUE;
   }
 
   public function just_throw_a_goddamn_error($field_name, $input) {
-    $this->throw_validation_exception($field_name, 'Throwing a generic pointless error');
+    $this->throwValidationException($field_name, 'Throwing a generic pointless error');
   }
 
 

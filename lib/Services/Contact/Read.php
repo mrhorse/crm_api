@@ -24,7 +24,7 @@ class Read extends Base {
    */
   public function getContact($serial) {
 
-    //$this->validation->check_is_string($serial);
+    //$this->validation->checkIsString($serial);
 
     $request = new Api\doContactGet($serial);
     $response = $this->client->doContactGet($request);

@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         syntaxCheck="false"
-         bootstrap="tests/bootstrap.php"
->
+<phpunit colors="true">
     <testsuites>
-        <testsuite name="OEmbed Test Suite">
-            <directory>./tests/Alb/OEmbed</directory>
+        <testsuite name="ThankQ Test Suite">
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src/Alb/OEmbed/</directory>
+            <directory>./lib</directory>
+            <directory>./vendor</directory>
         </whitelist>
     </filter>
 </phpunit>
