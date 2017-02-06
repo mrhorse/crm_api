@@ -18,6 +18,12 @@ services:
       - '@thankq.client'
 
 
+  thankq.user:
+    class:        Torchbox\Thankq\Services\WebUser
+    arguments:
+      - '@thankq.client'
+
+
   thankq.contact.create:
     class:        Torchbox\Thankq\Services\Contact\Create
     arguments:
