@@ -8,8 +8,6 @@ use Torchbox\Thankq\Services\Validation;
 use Torchbox\Thankq\Exception\ApiClassException;
 use Torchbox\Thankq\Exception\ValidationException;
 
-
-
 /**
  * Class Base
  * Base for performing 'contact' operations on the API - contact data is the
@@ -83,7 +81,7 @@ abstract class Base {
     'address_1' => array(
       'class' => 'esitWScontactAddress',
       'method' => 'setAddressLine1',
-      'validation' => array(),
+      'validation' => array('checkNoCommas'),
     ),
     // Basically there's nowhere for address_2 to go in thankq
     // See insertContact()

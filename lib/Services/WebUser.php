@@ -24,12 +24,12 @@ class WebUser {
   /**
    * @param $email
    * @param $password
-   * @return bool
+   * @return string
    */
   public function login($email, $password) {
     $request = new Api\doLogin($email, $password);
     $response = $this->client->doLogin($request);
-    $result = $response->getDoLoginResult()->getLoginGood();
+    $result = $response->getDoLoginResult()->getSerialnumber();
     return $result;
   }
 
@@ -48,7 +48,7 @@ class WebUser {
    * @param $serial
    * @param $email
    * @param $password
-   * @return \Torchbox\Thankq\Api\esitWSdoContactInsertResult
+   * @return bool
    */
   public function insertUser($serial, $email, $password) {
     // Web users will not exist unless we make them from our end. We can guarantee
@@ -60,7 +60,6 @@ class WebUser {
 
     $request = new Api\doContactLoginInsert($arg);
     $response = $this->client->doContactLoginInsert($request);
-    /** @var Api\esitWSdoContactInsertResult $result */
     $result = $response->getDoContactLoginInsertResult()->getOK();
     return $result;
   }

@@ -87,15 +87,28 @@ class Validation {
     return TRUE;
   }
 
+  /**
+   * Check the title prefix is an allowed value from titles lookup.
+   * @param $field_name
+   * @param $input
+   * @return bool
+   */
   public function checkIsAllowedNamePrefix($field_name, $input) {
-
     $valid_titles = $this->lookup->getNamePrefixes();
     if (!in_array($input, $valid_titles)) {
       $this->throwValidationException($field_name, 'Title prefix does not match any of allowed values.');
     }
     return TRUE;
-
   }
+
+
+  public function checkNoCommas($field_name, $input) {
+    if (strstr($input, ',') !== FALSE) {
+      $this->throwValidationException($field_name, 'Commas are not allowed does not match any of allowed values.');
+    }
+    return TRUE;
+  }
+
 
   /**
    * TODO: We can't have a 3rd arg due to the way we're executing the validation functions.

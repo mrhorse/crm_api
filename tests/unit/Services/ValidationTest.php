@@ -92,4 +92,18 @@ class ValidationTest extends \PHPUnit_Framework_TestCase {
     $this->expectException(ValidationException::class);
     $result = $validation->checkIsAllowedNamePrefix('field_title', 'Baron');
   }
+
+
+  public function testCheckNoCommas() {
+    $validation = new Validation($this->lookup);
+
+    $result = $validation->checkNoCommas('field', 'string');
+    $this->assertTrue($result);
+
+    $this->expectException(ValidationException::class);
+    $result = $validation->checkNoCommas('field', 'string,');
+
+    //$this->expectException(ValidationException::class);
+    //$result = $validation->checkNoCommas('field', new \stdClass());
+  }
 }
