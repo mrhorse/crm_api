@@ -55,10 +55,12 @@ class WebUser {
     // therefore that any web user will be accessibile using our dummy pw.
     $arg = new Api\esitWSdoContactLoginInsertArgument();
     $arg->setSerialnumber($serial);
-    $arg->setUsername($email);
     $arg->setPassword($password);
+    $arg->setUsername($email);
+    error_log(print_r($arg,true));
 
     $request = new Api\doContactLoginInsert($arg);
+
     $response = $this->client->doContactLoginInsert($request);
     $result = $response->getDoContactLoginInsertResult()->getOK();
     return $result;

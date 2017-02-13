@@ -190,13 +190,21 @@ abstract class Base {
   }
 
   /**
-   * Retrive the fields map - useful for dev, knowing what field IDs the
+   * Retrieve the fields map - useful for dev, knowing what field IDs the
    * this library should expect.
    * @param bool $field_defs_only
    * @return array
    */
   public function getFieldMap($field_defs_only = FALSE) {
    return $field_defs_only ? array_keys($this->field_map) : $this->field_map;
+  }
+
+
+  /**
+   * @param $field_map
+   */
+  public function setFieldMap($field_map) {
+    $this->field_map = $field_map;
   }
 
   /**
