@@ -25,161 +25,6 @@ abstract class Base {
 
 
   /**
-   * @var array Incoming field data keys associated with their esit class,
-   * method and validation method(s).
-   */
-  protected $field_map = array(
-
-    /**
-     * esitWScontact
-     */
-    // @TODO: Check title is one of allowed from getLookups
-    'title' => array(
-      'class' => 'esitWScontact',
-      'method' => 'setTitle',
-      'validation' => array('checkIsAllowedNamePrefix'),
-    ),
-    'first_name' => array(
-      'class' => 'esitWScontact',
-      'method' => 'setFirstname',
-      'validation' => array(),
-    ),
-
-    // Secondname = surname, fyi
-    // @TODO: Min 2 chars
-    'second_name' => array(
-      'class' => 'esitWScontact',
-      'method' => 'setKeyname',
-      'validation' => array(),
-    ),
-
-
-    /* Currently unused by us:
-    'initial' => array(
-      'class' => 'esitWScontact',
-      'method' => 'setOtherInitial',
-      'validation' => array(),
-    ),
-    // @TODO: What is this??
-    'post_nominal' => array(
-      'class' => 'esitWScontact',
-      'method' => 'setPostNominal',
-      'validation' => array(),
-    ),
-
-    */
-
-    /**
-     * esitWScontactAddress
-     */
-
-    'mail' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setEmailAddress',
-      'validation' => array(),
-    ),
-    'address_1' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setAddressLine1',
-      'validation' => array('checkNoCommas'),
-    ),
-    // Basically there's nowhere for address_2 to go in thankq
-    // See insertContact()
-    //'address_2' => array(),
-
-    'address_town' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setAddressLine3',
-      'validation' => array(),
-    ),
-
-    'address_county' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setAddressLine4',
-      'validation' => array(),
-    ),
-    'postcode' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setPostcode',
-      'validation' => array(),
-    ),
-    'phone_daytime' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setDayTelephone',
-      'validation' => array(),
-    ),
-    'phone_evening' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setEveningTelephone',
-      'validation' => array(),
-    ),
-    'phone_mobile' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setMobileNumber',
-      'validation' => array(),
-    ),
-
-    /* Currently unused by us:
-    'country' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setCountry',
-      'validation' => array(),
-    ),
-    'website' => array(
-      'class' => 'esitWScontactAddress',
-      'method' => 'setWebsite',
-      'validation' => array(),
-    ),
-    */
-
-
-    /**
-     * esitWScontactAttribute
-     */
-
-    'dob' => array(
-      'class' => 'esitWScontactAttribute',
-      'method' => 'setDateOfBirth',
-      // Must be datetime object \DateTime
-      'validation' => array('checkIsDatetimeObject'),
-    ),
-    'source' => array(
-      'class' => 'esitWScontactAttribute',
-      'method' => 'setSource',
-      'validation' => array(),
-    ),
-    'organisation' => array(),
-
-    // @TODO Default is individual. Set to other value if organisation provided.
-    'contact_type' => array(
-      'class' => 'esitWScontactAttribute',
-      'method' => 'setContactType',
-      'validation' => array(),
-    ),
-
-    /* Unused:
-    // Gender is automatically determined by the CRM using the name prefix
-    'gender' => array(
-      'class' => 'esitWScontactAttribute',
-      'method' => 'setGender',
-      'validation' => array(),
-    ),
-    'marital_status' => array(
-      'class' => 'esitWScontactAttribute',
-      'method' => 'setGender',
-      'validation' => array(),
-    ),
-    */
-
-
-    /**
-     * esitWScontactDataProtection
-     */
-    // @TODO: Data protection
-
-  );
-
-  /**
    * Contact constructor.
    * @param ThankqClient $client
    * @param Validation $validation
@@ -188,6 +33,206 @@ abstract class Base {
     $this->client = $client;
     $this->validation = $validation;
   }
+
+  /**
+   * @var array Incoming field data keys associated with their esit class,
+   * method and validation method(s).
+   */
+  protected $field_map = [
+
+    /**
+     * esitWScontact
+     */
+    // @TODO: Check title is one of allowed from getLookups
+    'crm_contact__title' => [
+      'class' => 'esitWScontact',
+      'method' => 'setTitle',
+      'validation' => ['checkIsAllowedNamePrefix'],
+    ],
+    'crm_contact__first_name' => [
+      'class' => 'esitWScontact',
+      'method' => 'setFirstname',
+      'validation' => [],
+    ],
+
+    // Secondname = surname, fyi
+    // @TODO: Min 2 chars
+    'crm_contact__second_name' => [
+      'class' => 'esitWScontact',
+      'method' => 'setKeyname',
+      'validation' => [],
+    ],
+
+
+    /* Currently unused by us:
+    'crm_contact__initial' => [
+      'class' => 'esitWScontact',
+      'method' => 'setOtherInitial',
+      'validation' => [],
+    ],
+    // @TODO: What is this??
+    'crm_contact__post_nominal' => [
+      'class' => 'esitWScontact',
+      'method' => 'setPostNominal',
+      'validation' => [],
+    ],
+
+    */
+
+    /**
+     * esitWScontactAddress
+     */
+
+    'mail' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setEmailAddress',
+      'validation' => [],
+    ],
+    'crm_contact__address_1' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setAddressLine1',
+      'validation' => ['checkNoCommas'],
+    ],
+    // Basically there's nowhere for address_2 to go in thankq
+    // - we merge address_2 into address_1 in $this->preProcessFieldData()
+    'crm_contact__address_2' => [
+      'validation' => ['checkNoCommas'],
+    ],
+
+    'crm_contact__address_town' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setAddressLine3',
+      'validation' => [],
+    ],
+
+    'crm_contact__address_county' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setAddressLine4',
+      'validation' => [],
+    ],
+    'crm_contact__postcode' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setPostcode',
+      'validation' => [],
+    ],
+    'crm_contact__phone_daytime' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setDayTelephone',
+      'validation' => [],
+    ],
+    'crm_contact__phone_evening' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setEveningTelephone',
+      'validation' => [],
+    ],
+    'crm_contact__phone_mobile' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setMobileNumber',
+      'validation' => [],
+    ],
+
+    /* Currently unused by us:
+    'crm_contact__country' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setCountry',
+      'validation' => [],
+    ],
+    'crm_contact__website' => [
+      'class' => 'esitWScontactAddress',
+      'method' => 'setWebsite',
+      'validation' => [],
+    ],
+    */
+
+
+    /**
+     * esitWScontactAttribute
+     */
+
+    'crm_contact__dob' => [
+      'class' => 'esitWScontactAttribute',
+      'method' => 'setDateOfBirth',
+      // Must be datetime object \DateTime
+      'validation' => ['checkIsDatetimeObject'],
+    ],
+    'crm_contact__source' => [
+      'class' => 'esitWScontactAttribute',
+      'method' => 'setSource',
+      'validation' => [],
+    ],
+
+    'crm_contact__organisation' => [],
+
+    // @TODO Default is individual. Set to other value if organisation provided.
+    'crm_contact__contact_type' => [
+      'class' => 'esitWScontactAttribute',
+      'method' => 'setContactType',
+      'validation' => [],
+    ],
+
+    /* Unused:
+    // Gender is automatically determined by the CRM using the name prefix
+    'gender' => [      'class' => 'esitWScontactAttribute',
+      'method' => 'setGender',
+      'validation' => [,
+    ],
+    'marital_status' => [      'class' => 'esitWScontactAttribute',
+      'method' => 'setGender',
+      'validation' => [,
+    ],
+    */
+
+
+    /**
+     * esitWScontactDataProtection
+     */
+
+    'crm_contact__do_not_contact' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDoNotContact',
+    ],
+    'crm_contact__do_not_mail' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDoNotMail',
+      'validation' => [],
+    ],
+    'crm_contact__do_not_phone' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDoNotPhone',
+    ],
+    'crm_contact__do_not_email' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDoNotEmail',
+    ],
+    'crm_contact__do_not_sms' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDoNotSMS',
+    ],
+
+    'crm_contact__mail_third_party' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setMailThirdParty',
+    ],
+    'crm_contact__email_third_party' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setEmailThirdParty',
+    ],
+    'crm_contact__phone_third_party' => [
+      'class' => 'esitWScontactDataProtection',
+      'method' => 'setPhoneThirdParty',
+    ],
+/*
+    'dm_email_opt_in' => [      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDmEmailOptIn',
+    ),
+    'dm_mail_opt_in' => [      'class' => 'esitWScontactDataProtection',
+      'method' => 'setDmMailOptIn',
+    ),
+*/
+
+
+
+  ];
 
   /**
    * Retrieve the fields map - useful for dev, knowing what field IDs the
@@ -238,9 +283,9 @@ abstract class Base {
      */
 
     // There is no storage for address2 in Thankq - Merge add2 into 1, separate with newline.
-    if (!empty($field_data['address_1']) && !empty(trim($field_data['address_2']))) {
-      $field_data['address_1'] = $field_data['address_1'] . "\n" . $field_data['address_2'];
-      unset($field_data['address_2']);
+    if (!empty($field_data['crm_contact__address_1']) && !empty(trim($field_data['crm_contact__address_2']))) {
+      $field_data['crm_contact__address_1'] = $field_data['crm_contact__address_1'] . "\n" . $field_data['crm_contact__address_2'];
+      unset($field_data['crm_contact__address_2']);
     }
 
   }
@@ -273,7 +318,7 @@ abstract class Base {
       }
     }
     // If we reach here without exception then flag validated
-    $field_data['thankq_validated'] = TRUE;
+    $field_data['crm_validated'] = TRUE;
   }
 
   /**
@@ -285,7 +330,8 @@ abstract class Base {
   protected function setContactData(array $field_data) {
 
     foreach ($field_data as $field_name => $value) {
-      if (array_key_exists($field_name, $this->field_map) && !empty($field_data[$field_name])) {
+      // Value we're setting on a field may be a boolean - check not null instead.
+      if (array_key_exists($field_name, $this->field_map) && !is_null($field_data[$field_name])) {
         // convert the classname in array to variable
         $classname = $this->field_map[$field_name]['class'];
         // Variable variable (usually double $$ for procedural stuff).

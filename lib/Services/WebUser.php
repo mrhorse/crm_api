@@ -57,7 +57,6 @@ class WebUser {
     $arg->setSerialnumber($serial);
     $arg->setPassword($password);
     $arg->setUsername($email);
-    error_log(print_r($arg,true));
 
     $request = new Api\doContactLoginInsert($arg);
 

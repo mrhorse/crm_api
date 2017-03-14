@@ -33,8 +33,9 @@ class Create extends Base {
     $this->esitWScontactAddress = new Api\esitWScontactAddress();
     $this->esitWScontactAttribute = new Api\esitWScontactAttribute();
     // Defaults should be opt-out for data protection, according to best
-    // practices.
-    $this->esitWScontactDataProtection = new Api\esitWScontactDataProtection(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+    // practices. All boolean.
+    // $doNotContact, $doNotMail, $doNotPhone, $doNotEmail, $doNotSMS, $mailThirdParty, $emailThirdParty, $phoneThirdParty, $dmEmailOptIn, $dmMailOptIn
+    $this->esitWScontactDataProtection = new Api\esitWScontactDataProtection(FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
   }
   /**
    * @param array $field_data
